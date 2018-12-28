@@ -8,14 +8,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
 public abstract class Control extends JPanel implements KeyListener, MouseListener {
 
 	private static boolean[] keyboardState = new boolean[525]; // Check keyboard
@@ -38,6 +34,13 @@ public abstract class Control extends JPanel implements KeyListener, MouseListen
 		this.addKeyListener(this); // Receive keyboard
 
 		this.addMouseListener(this); // Receive mouse
+
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent componentEvent) {
+				Framework.frameWidth=getWidth();
+				Framework.frameHeight=getHeight();
+			}
+		});
 	}
 
 	public abstract void draw(Graphics2D g2d); // Draw screen

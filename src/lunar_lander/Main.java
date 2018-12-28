@@ -17,8 +17,6 @@ public class Main {
 
     private Landingspace landingSpace; // Area to land
 
-    private BufferedImage background; // Background image
-
     private BufferedImage failed; // Failed image
 
     public Main() {
@@ -44,10 +42,6 @@ public class Main {
 
     private void loadcontent() {
 	try {
-
-	    URL backgroundUrl = this.getClass().getResource("/lunar_lander/resources/img/background.png");
-	    background = ImageIO.read(backgroundUrl);
-
 	    URL failedUrl = this.getClass().getResource("/lunar_lander/resources/img/failed.png");
 	    failed = ImageIO.read(failedUrl);
 
@@ -75,7 +69,7 @@ public class Main {
     }
 
     public void draw(Graphics2D g2d, Point mousePosition) {
-	g2d.drawImage(background, 0, 0, Framework.frameWidth,
+	g2d.drawImage(null, 0, 0, Framework.frameWidth,
 		Framework.frameHeight, null);
 
 	landingSpace.draw(g2d);

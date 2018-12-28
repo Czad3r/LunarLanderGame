@@ -34,7 +34,7 @@ public class Framework extends Control {
 
 	public static GameState gameState;
 
-	private double gameTime; // "Scientific" time
+	private double gameTime;
 
 	private double lastTime;
 
@@ -46,7 +46,7 @@ public class Framework extends Control {
 
 	public Framework() {
 		super();
-		
+
 		gameState = GameState.DISPLAY;
 
 		Thread gameThread = new Thread() {
@@ -56,6 +56,8 @@ public class Framework extends Control {
 			}
 		};
 		gameThread.start();
+
+
 	}
 	
 	private void initialize() {
@@ -135,7 +137,6 @@ public class Framework extends Control {
 		}
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	public void draw(Graphics2D g2d) {
 		switch (gameState) {
 		case RUNNING:

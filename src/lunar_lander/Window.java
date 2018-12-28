@@ -1,5 +1,7 @@
 package lunar_lander;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -8,6 +10,11 @@ import javax.swing.SwingUtilities;
 
 public class Window extends JFrame {
 
+	private int windowHeight=720;
+	private int windowWidth=1280;
+
+
+
 	private Window() {
 
 		URL iconURL = getClass().getResource("/lunar_lander/resources/img/icon.png");
@@ -15,7 +22,7 @@ public class Window extends JFrame {
 		this.setIconImage(icon.getImage());
 		this.setTitle("Lunar Lander");
 		{
-			this.setSize(1280, 720); // 1280x720px
+			this.setSize(windowWidth, windowHeight); // 1280x720px
 			this.setLocationRelativeTo(null); // Centered
 			this.setResizable(true); // Resizable
 		}
@@ -25,6 +32,7 @@ public class Window extends JFrame {
 		this.setContentPane(new Framework());
 
 		this.setVisible(true);
+
 	}
 
 	public static void main(String[] args) {
@@ -36,5 +44,13 @@ public class Window extends JFrame {
 
 					}
 				});
+	}
+
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+	public int getWindowWidth() {
+		return windowWidth;
 	}
 }
