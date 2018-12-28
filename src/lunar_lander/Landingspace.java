@@ -31,6 +31,13 @@ public class Landingspace {
 
 		x = random.nextInt(Framework.frameWidth - landingSpaceWidth); // X random start
 	}
+    public Landingspace(int xPosition) {
+        initialize();
+        loadcontent();
+
+        x = xPosition;
+    }
+
 
 	private void initialize() {
 		random = new Random();
@@ -42,13 +49,16 @@ public class Landingspace {
 			URL landingSpaceUrl = this.getClass().getResource("/lunar_lander/resources/img/landing_area.png");
 			landingSpace = ImageIO.read(landingSpaceUrl);
 			landingSpaceWidth = landingSpace.getWidth();
+			landingSpaceHeight=landingSpace.getHeight();
 		} catch (IOException ex) {
 			Logger.getLogger(Landingspace.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
 	public void draw(Graphics2D g2d) {
-		g2d.drawImage(landingSpace, x, y, null);
+        double yScale=(double)Framework.frameHeight/720;
+        double xScale=(double)Framework.frameWidth/1280;
+		g2d.drawImage(landingSpace, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landingSpaceWidth),(int)(yScale*landingSpaceHeight),null);
 	}
 
 }

@@ -1,6 +1,6 @@
 package lunar_lander;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,23 +14,25 @@ public class Rocket {
 
 	private Random random; // Random X start position
 
-	public int x; // X coordinate (2D)
+	private int x; // X coordinate (2D)
 
-	public int y; // Y coordinate (2D)
+	private int y; // Y coordinate (2D)
 
-	public boolean landed; // Check if landed
+	private boolean landed; // Check if landed
 
-	public boolean crashed; // Check if crashed
+	private boolean crashed; // Check if crashed
 
 	private int speedAccelerating; // Acceleration
 
-	public int maxLandingSpeed; // Max speed for land
+	private int maxLandingSpeed; // Max speed for land
 
 	private double speedX; // Horizontal speed
 
-	public double speedY; // Vertical speed
+	private double speedY; // Vertical speed
 
-	public double speedGrav; // Gravity
+	private double speedGrav; // Gravity
+
+    private double actualFuel,maxFuel;
 
 	private BufferedImage landerRocket; // Lunar Lander
 
@@ -65,6 +67,8 @@ public class Rocket {
 		speedY = 1;
 		speedGrav = -0.16;
 		maxLandingSpeed = 5;
+		maxFuel=50;
+		actualFuel=50;
 	}
 
 
@@ -102,21 +106,26 @@ public class Rocket {
 
 	public void Update() // Inverted rocket controls
 	{
-		if (Control.keyboardKeyState(KeyEvent.VK_DOWN)) // Key DOWN
-			speedY -= speedAccelerating;
-
+	    if(actualFuel<=0)Framework.gameState = Framework.GameState.GAMEOVER;
+		if (Control.keyboardKeyState(KeyEvent.VK_DOWN)) { // Key DOWN
+            speedY -= speedAccelerating;
+            actualFuel -= 0.1;
+        }
 		else {
 			speedY -= speedGrav;
 		}
 
 		if (Control.keyboardKeyState(KeyEvent.VK_UP)){ // Key UP
 			speedY += speedAccelerating;
+            actualFuel-=0.1;
 		}
 		if (Control.keyboardKeyState(KeyEvent.VK_RIGHT)){ // Key RIGHT
 			speedX -= speedAccelerating;
+            actualFuel-=0.1;
 		}
 		if (Control.keyboardKeyState(KeyEvent.VK_LEFT)){ // Key LEFT
 			speedX += speedAccelerating;
+            actualFuel-=0.1;
 	        }
 		if (Control.keyboardKeyState(KeyEvent.VK_0)){ // Cheat
 			speedY = 0;
@@ -129,31 +138,88 @@ public class Rocket {
 	
 
 	public void draw(Graphics2D g2d) {
+        double yScale=(double)Framework.frameHeight/720;
+        double xScale=(double)Framework.frameWidth/1280;
 
 		if (landed) // Check if landed
 		{
-			g2d.drawImage(landerLanded, x, y, null);
+			g2d.drawImage(landerLanded, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 		} else if (crashed) // Check if crashed
 		{
-			g2d.drawImage(landerCrashed, x, y, null);
+			g2d.drawImage(landerCrashed,(int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 		} else {
 			if (Control.keyboardKeyState(KeyEvent.VK_UP)) // Draw fly image
-			g2d.drawImage(landerFlyingDown, x, y, null);
-			g2d.drawImage(landerRocket, x, y, null);
+			g2d.drawImage(landerFlyingDown, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
+			g2d.drawImage(landerRocket, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 
 			if (Control.keyboardKeyState(KeyEvent.VK_DOWN)) // Draw fly image
-			g2d.drawImage(landerFlyingUp, x, y, null);
-			g2d.drawImage(landerRocket, x, y, null);
+			g2d.drawImage(landerFlyingUp, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
+			g2d.drawImage(landerRocket, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 
 			if (Control.keyboardKeyState(KeyEvent.VK_RIGHT)) // Draw fly image
-			g2d.drawImage(landerFlyingLeft, x, y, null);
-			g2d.drawImage(landerRocket, x, y, null);
+			g2d.drawImage(landerFlyingLeft, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
+			g2d.drawImage(landerRocket, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 
 			if (Control.keyboardKeyState(KeyEvent.VK_LEFT)) // Draw fly image
-			g2d.drawImage(landerFlyingRight, x, y, null);
-			g2d.drawImage(landerRocket, x, y, null);
+			g2d.drawImage(landerFlyingRight, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
+			g2d.drawImage(landerRocket, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
+
+		double fuelStatus=actualFuel/maxFuel;
+		g2d.setColor(Color.BLACK);
+		g2d.drawRect(Framework.frameWidth-50,0,50,15);
+		g2d.fillRect(Framework.frameWidth-50,0,(int)(fuelStatus*50),15);
 		}
 	}
-	
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public boolean isLanded() {
+        return landed;
+    }
+
+    public boolean isCrashed() {
+        return crashed;
+    }
+
+    public int getSpeedAccelerating() {
+        return speedAccelerating;
+    }
+
+    public int getMaxLandingSpeed() {
+        return maxLandingSpeed;
+    }
+
+    public double getSpeedX() {
+        return speedX;
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public double getSpeedGrav() {
+        return speedGrav;
+    }
+
+    public double getActualFuel() {
+        return actualFuel;
+    }
+
+    public double getMaxFuel() {
+        return maxFuel;
+    }
+
+    public void setLanded(boolean landed) {
+        this.landed = landed;
+    }
+
+    public void setCrashed(boolean crashed) {
+        this.crashed = crashed;
+    }
 }

@@ -54,23 +54,21 @@ public class Main {
     {
 	player.Update();
 
-	if (player.y + player.landerRocketHeight - 10 > landingSpace.y) {
-	    if ((player.x > landingSpace.x)
-		    && (player.x < landingSpace.x + landingSpace.landingSpaceWidth - player.landerRocketWidth)) {
-		if (player.speedY <= player.maxLandingSpeed)
-		    player.landed = true;
+	if (player.getY() + player.landerRocketHeight - 10 > landingSpace.y) {
+	    if ((player.getX() > landingSpace.x)
+		    && (player.getX() < landingSpace.x + landingSpace.landingSpaceWidth - player.landerRocketWidth)) {
+		if (player.getSpeedY() <= player.getMaxLandingSpeed())
+		    player.setLanded(true);
 		else
-		    player.crashed = true;
+		    player.setCrashed(true);
 	    } else
-		player.crashed = true;
+		player.setCrashed(true);
 
 	    Framework.gameState = Framework.GameState.GAMEOVER;
 	}
     }
 
     public void draw(Graphics2D g2d, Point mousePosition) {
-	g2d.drawImage(null, 0, 0, Framework.frameWidth,
-		Framework.frameHeight, null);
 
 	landingSpace.draw(g2d);
 
@@ -82,7 +80,7 @@ public class Main {
     {
 	draw(g2d, mousePosition);
 
-	if (player.landed) {
+	if (player.isLanded()) {
 	    g2d.setColor(Color.green);
 	    g2d.drawString("Congrats!", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3);
 	    g2d.drawString("You landed in " + gameTime / Framework.SECINNANO + " seconds.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 20);

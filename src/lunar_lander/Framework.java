@@ -105,8 +105,6 @@ public class Framework extends Control {
 				initialize();
 				
 				loadcontent();
-				
-				
 
 				gameState = GameState.MENU;
 				break;
