@@ -54,23 +54,10 @@ public class Rocket {
 
 	public Rocket() // Gather rocket dimensions
 	{
-		initialize();
 		loadcontent();
-
+        random = new Random(); // Initialize random start
 		x = random.nextInt(Framework.frameWidth - landerRocketWidth); // X random start
 	}
-
-	private void initialize() {
-	random = new Random(); // Initialize random start
-
-		speedAccelerating = 1;
-		speedY = 1;
-		speedGrav = -0.16;
-		maxLandingSpeed = 5;
-		maxFuel=50;
-		actualFuel=50;
-	}
-
 
 	private void loadcontent() // Load resources
 	{
@@ -166,8 +153,8 @@ public class Rocket {
 
 		double fuelStatus=actualFuel/maxFuel;
 		g2d.setColor(Color.BLACK);
-		g2d.drawRect(Framework.frameWidth-50,0,50,15);
-		g2d.fillRect(Framework.frameWidth-50,0,(int)(fuelStatus*50),15);
+		g2d.drawRect(Framework.frameWidth-90,0,90,25);
+		g2d.fillRect(Framework.frameWidth-90,0,(int)(fuelStatus*90),25);
 		}
 	}
 
@@ -221,5 +208,33 @@ public class Rocket {
 
     public void setCrashed(boolean crashed) {
         this.crashed = crashed;
+    }
+
+    public void setSpeedAccelerating(int speedAccelerating) {
+        this.speedAccelerating = speedAccelerating;
+    }
+
+    public void setMaxLandingSpeed(int maxLandingSpeed) {
+        this.maxLandingSpeed = maxLandingSpeed;
+    }
+
+    public void setSpeedGrav(double speedGrav) {
+        this.speedGrav = speedGrav;
+    }
+
+    public void setActualFuel(double actualFuel) {
+        this.actualFuel = actualFuel;
+    }
+
+    public void setMaxFuel(double maxFuel) {
+        this.maxFuel = maxFuel;
+    }
+
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
     }
 }

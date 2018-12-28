@@ -1,6 +1,8 @@
 package lunar_lander;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Map {
     private int[] map; //Generating irregular shapes , every element has own height
@@ -17,9 +19,22 @@ public class Map {
 
     private int landingSpacePos;
 
+    private Rocket player;
+
 
     public Map(int level) {
         loadWorld("resources/maps/map" + level + ".txt");
+        player = new Rocket();
+        initializeRocket();
+    }
+
+    private void initializeRocket() {
+        player.setSpeedAccelerating(speedAccelerating);
+        player.setSpeedY(speedY);
+        player.setSpeedGrav(speedGrav);
+        player.setMaxLandingSpeed(maxLandingSpeed);
+        player.setMaxFuel(fuel);
+        player.setActualFuel(fuel);
     }
 
     private void loadWorld(String path) {
@@ -27,7 +42,7 @@ public class Map {
         String[] tokens = file.split("\\s+");
         speedAccelerating = Utils.parseInt(tokens[0]);
         speedY = Utils.parseInt(tokens[1]);
-        speedGrav = (Utils.parseInt(tokens[2])) / (-10);   //Dividing to achieve negative double
+        speedGrav = (double) (Utils.parseInt(tokens[2])) / (-10);   //Dividing to achieve negative double
         maxLandingSpeed = Utils.parseInt(tokens[3]);
         fuel = Utils.parseInt(tokens[4]);
         landingSpacePos = Utils.parseInt(tokens[5]);
@@ -39,26 +54,51 @@ public class Map {
     }
 
     public void draw(Graphics2D g2d) {
-        double yScale=(double)Framework.frameHeight/720;
-        double xScale=(double)Framework.frameWidth/1280;
+        double yScale = (double) Framework.frameHeight / 720;
+        double xScale = (double) Framework.frameWidth / 1280;
         for (int i = 0; i < map.length; i++) {
-            g2d.drawRect(i * Framework.frameWidth / 10, (int)((Framework.frameHeight-map[i])*yScale), (int)(Framework.frameWidth / 12*xScale), (int)(yScale*map[i]));
+            g2d.setColor(Color.CYAN);
+            g2d.fillRect((int) (xScale * i * ((double) Framework.frameWidth / 10)), (int) ((Framework.frameHeight - map[i]) * yScale), (int) (Framework.frameWidth / 10 * xScale), (int) (yScale * map[i]));
         }
     }
 
-    public boolean checkCollision(Rocket rocket) {
-        return false;
+    public boolean checkCollision() {
+
+        Rectangle rocketRectangle = new Rectangle(player.getX(),player.getY(),player.landerRocketWidth,player.landerRocketHeight);
+        int xSection=player.getX()/(Framework.frameWidth / 10);
+        if(xSection==landingSpacePos) {
+            if (player.getY() + player.landerRocketHeight - 10 > getLandingSpacePosY()) {
+                if ((player.getX() > getLandingSpacePosX())
+                        && (player.getX() < getLandingSpacePosX() + Framework.frameWidth / 10 - (player.landerRocketWidth)/2)) {
+                    if (player.getSpeedY() <= player.getMaxLandingSpeed())
+                        player.setLanded(true);
+                    else
+                        player.setCrashed(true);
+                } else
+                    player.setCrashed(true);
+
+                Framework.gameState = Framework.GameState.GAMEOVER;
+            }
+        }
+        if(xSection>-1 && xSection<10){
+        Rectangle ground=new Rectangle((int) ( xSection * ((double) Framework.frameWidth / 10)),  ((Framework.frameHeight - map[xSection]) ),  (Framework.frameWidth / 10 ),  ( map[xSection]));
+        return rocketRectangle.intersects(ground);}
+        else return true;
     }
 
     public int getLandingSpacePosX() {
-        return landingSpacePos*(1/12)*Framework.frameWidth;
+        return (int) (landingSpacePos * ((double) Framework.frameWidth / 10));
     }
 
     public int getLandingSpacePosY() {
-        return map[getLandingSpacePosX()];
+        return Framework.frameHeight - map[landingSpacePos]-15;
     }
 
     public int[] getMap() {
         return map;
+    }
+
+    public Rocket getPlayer() {
+        return player;
     }
 }

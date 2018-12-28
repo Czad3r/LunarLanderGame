@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 
 public class Landingspace {
 
-	private Random random; // Random start position on X coordinate
 
 	public int x; // X coordinate
 
@@ -25,24 +24,13 @@ public class Landingspace {
 	public int landingSpaceWidth;
 	public int landingSpaceHeight;
 
-	public Landingspace() {
-		initialize();
-		loadcontent();
 
-		x = random.nextInt(Framework.frameWidth - landingSpaceWidth); // X random start
-	}
-    public Landingspace(int xPosition) {
-        initialize();
+    public Landingspace(int xPosition,int yPosition) {
         loadcontent();
 
         x = xPosition;
+        y= yPosition;
     }
-
-
-	private void initialize() {
-		random = new Random();
-		y = (int) (Framework.frameHeight * 0.95); // 95% of frame height
-	}
 
 	private void loadcontent() {
 		try {
@@ -58,7 +46,7 @@ public class Landingspace {
 	public void draw(Graphics2D g2d) {
         double yScale=(double)Framework.frameHeight/720;
         double xScale=(double)Framework.frameWidth/1280;
-		g2d.drawImage(landingSpace, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landingSpaceWidth),(int)(yScale*landingSpaceHeight),null);
+		g2d.drawImage(landingSpace, (int)(xScale*x), (int)(yScale*y), (int)(xScale*Framework.frameWidth / 10),(int)(yScale*landingSpaceHeight),null);
 	}
 
 }

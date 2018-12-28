@@ -14,91 +14,93 @@ import javax.swing.JPanel;
 
 public abstract class Control extends JPanel implements KeyListener, MouseListener {
 
-	private static boolean[] keyboardState = new boolean[525]; // Check keyboard
+    private static boolean[] keyboardState = new boolean[525]; // Check keyboard
 
-	private static boolean[] mouseState = new boolean[3]; // Check mouse
+    private static boolean[] mouseState = new boolean[3]; // Check mouse
 
-	public Control() {
+    public Control() {
 
-		this.setDoubleBuffered(true);
-		this.setFocusable(true);
+        this.setDoubleBuffered(true);
+        this.setFocusable(true);
 
-		if (true) // Hide mouse cursor
-		{
-			BufferedImage blankCursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-			Cursor blankCursor = Toolkit.getDefaultToolkit()
-					.createCustomCursor(blankCursorImg, new Point(0, 0), null);
-			this.setCursor(blankCursor);
-		}
+        if (true) // Hide mouse cursor
+        {
+            BufferedImage blankCursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+            Cursor blankCursor = Toolkit.getDefaultToolkit()
+                    .createCustomCursor(blankCursorImg, new Point(0, 0), null);
+            this.setCursor(blankCursor);
+        }
 
-		this.addKeyListener(this); // Receive keyboard
+        this.addKeyListener(this); // Receive keyboard
 
-		this.addMouseListener(this); // Receive mouse
+        this.addMouseListener(this); // Receive mouse
 
-		this.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent componentEvent) {
-				Framework.frameWidth=getWidth();
-				Framework.frameHeight=getHeight();
-			}
-		});
-	}
+        this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                Framework.frameWidth = getWidth();
+                Framework.frameHeight = getHeight();
+            }
+        });
+    }
 
-	public abstract void draw(Graphics2D g2d); // Draw screen
+    public abstract void draw(Graphics2D g2d); // Draw screen
 
-	public void paintComponent(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		super.paintComponent(g2d);
-		draw(g2d);
-	}
+    public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        super.paintComponent(g2d);
+        draw(g2d);
+    }
 
-	public static boolean keyboardKeyState(int key) // Check for pressed key
-	{
-		return keyboardState[key];
-	}
+    public static boolean keyboardKeyState(int key) // Check for pressed key
+    {
+        return keyboardState[key];
+    }
 
-	public void keyPressed(KeyEvent e) {
-		keyboardState[e.getKeyCode()] = true;
-	}
+    public void keyPressed(KeyEvent e) {
 
-	public void keyReleased(KeyEvent e) {
-		keyboardState[e.getKeyCode()] = false;
-		keyReleasedFramework(e);
-	}
+        keyboardState[e.getKeyCode()] = true;
+    }
 
-	public void keyTyped(KeyEvent e) {
-	}
+    public void keyReleased(KeyEvent e) {
 
-	public abstract void keyReleasedFramework(KeyEvent e);
+        keyboardState[e.getKeyCode()] = false;
+        keyReleasedFramework(e);
+    }
 
-	public static boolean mouseButtonState(int button) // Check for pressed mouse
-	{
-		return mouseState[button - 1];
-	}
+    public void keyTyped(KeyEvent e) {
+    }
 
-	private void mouseKeyStatus(MouseEvent e, boolean status) // Disable mouse
-	{
-		if (e.getButton() == MouseEvent.BUTTON1)
-			mouseState[0] = status;
-		else if (e.getButton() == MouseEvent.BUTTON2)
-			mouseState[1] = status;
-		else if (e.getButton() == MouseEvent.BUTTON3)
-			mouseState[2] = status;
-	}
+    public abstract void keyReleasedFramework(KeyEvent e);
 
-	public void mousePressed(MouseEvent e) {
-		mouseKeyStatus(e, true);
-	}
+    public static boolean mouseButtonState(int button) // Check for pressed mouse
+    {
+        return mouseState[button - 1];
+    }
 
-	public void mouseReleased(MouseEvent e) {
-		mouseKeyStatus(e, false);
-	}
+    private void mouseKeyStatus(MouseEvent e, boolean status) // Disable mouse
+    {
+        if (e.getButton() == MouseEvent.BUTTON1)
+            mouseState[0] = status;
+        else if (e.getButton() == MouseEvent.BUTTON2)
+            mouseState[1] = status;
+        else if (e.getButton() == MouseEvent.BUTTON3)
+            mouseState[2] = status;
+    }
 
-	public void mouseClicked(MouseEvent e) {
-	}
+    public void mousePressed(MouseEvent e) {
+        mouseKeyStatus(e, true);
+    }
 
-	public void mouseEntered(MouseEvent e) {
-	}
+    public void mouseReleased(MouseEvent e) {
+        mouseKeyStatus(e, false);
+    }
 
-	public void mouseExited(MouseEvent e) {
-	}
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
 }
