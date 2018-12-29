@@ -1,8 +1,8 @@
 package lunar_lander;
 
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.geom.Ellipse2D;
+import java.util.Random;
 
 public class Map {
     private int[] map; //Generating irregular shapes , every element has own height
@@ -21,11 +21,14 @@ public class Map {
 
     private Rocket player;
 
+    private Ellipse2D deadCircle;
+
 
     public Map(int level) {
         loadWorld("resources/maps/map" + level + ".txt");
         player = new Rocket();
         initializeRocket();
+        initializeCircle();
     }
 
     private void initializeRocket() {
@@ -35,6 +38,16 @@ public class Map {
         player.setMaxLandingSpeed(maxLandingSpeed);
         player.setMaxFuel(fuel);
         player.setActualFuel(fuel);
+    }
+
+    private void initializeCircle(){
+
+        int level=Main.getLevel();
+        Random random=new Random();
+        int x=random.nextInt(Framework.frameWidth/2);
+        int y=random.nextInt(Framework.frameHeight/2);
+        deadCircle=new Ellipse2D.Double(x,y,20*level,20*level);
+
     }
 
     private void loadWorld(String path) {
@@ -56,6 +69,16 @@ public class Map {
     public void draw(Graphics2D g2d) {
         double yScale = (double) Framework.frameHeight / 720;
         double xScale = (double) Framework.frameWidth / 1280;
+        //Section drawing circle
+        g2d.fillRoundRect((int)deadCircle.getX()-10,(int)deadCircle.getY()-10,
+                (int)deadCircle.getWidth(),(int)deadCircle.getHeight(),
+                (int)deadCircle.getWidth(),(int)deadCircle.getHeight());
+
+        //Updating circle if game not paused
+        if(Framework.gameState== Framework.GameState.RUNNING)
+        checkCircle();
+
+        //Section drawing irregular ground
         for (int i = 0; i < map.length; i++) {
             g2d.setColor(Color.CYAN);
             g2d.fillRect((int) (xScale * i * ((double) Framework.frameWidth / 10)), (int) ((Framework.frameHeight - map[i]) * yScale), (int) (Framework.frameWidth / 10 * xScale), (int) (yScale * map[i]));
@@ -64,12 +87,18 @@ public class Map {
 
     public boolean checkCollision() {
 
-        Rectangle rocketRectangle = new Rectangle(player.getX(),player.getY(),player.landerRocketWidth,player.landerRocketHeight);
-        int xSection=player.getX()/(Framework.frameWidth / 10);
-        if(xSection==landingSpacePos) {
+        Rectangle rocketRectangle = new Rectangle(player.getX(), player.getY(), player.landerRocketWidth, player.landerRocketHeight);
+
+        if(checkCollisionWithCircle(rocketRectangle)){
+            player.setCrashed(true);
+            return true;
+        }
+
+        int xSection = player.getX() / (Framework.frameWidth / 10);
+        if (xSection == landingSpacePos) {
             if (player.getY() + player.landerRocketHeight - 10 > getLandingSpacePosY()) {
                 if ((player.getX() > getLandingSpacePosX())
-                        && (player.getX() < getLandingSpacePosX() + Framework.frameWidth / 10 - (player.landerRocketWidth)/2)) {
+                        && (player.getX() < getLandingSpacePosX() + Framework.frameWidth / 10 - (player.landerRocketWidth) / 2)) {
                     if (player.getSpeedY() <= player.getMaxLandingSpeed())
                         player.setLanded(true);
                     else
@@ -80,15 +109,32 @@ public class Map {
                 Framework.gameState = Framework.GameState.GAMEOVER;
             }
         }
-        if(xSection>-1 && xSection<10){
-        Rectangle ground=new Rectangle((int) ( xSection * ((double) Framework.frameWidth / 10)),  ((Framework.frameHeight - map[xSection]) ),  (Framework.frameWidth / 10 ),  ( map[xSection]));
-        if (rocketRectangle.intersects(ground)){
+        if (xSection > -1 && xSection < 10) {
+            Rectangle ground = new Rectangle((int) (xSection * ((double) Framework.frameWidth / 10)), ((Framework.frameHeight - map[xSection])), (Framework.frameWidth / 10), (map[xSection]));
+            if (rocketRectangle.intersects(ground)) {
+                player.setCrashed(true);
+                return true;
+            } else return false;
+        } else {
             player.setCrashed(true);
             return true;
         }
-        else return false;
+    }
+
+    private void checkCircle(){
+        if(deadCircle.getCenterX()<Framework.frameWidth+deadCircle.getWidth() && deadCircle.getCenterX()>-deadCircle.getWidth()
+            && deadCircle.getCenterY()<Framework.frameHeight+deadCircle.getHeight())
+            updateCircle();
+    }
+    private void updateCircle(){
+        if(!player.isCrashed()){
+        int move=Main.getLevel();
+    deadCircle.setFrame(deadCircle.getX()+move,deadCircle.getY()+move,deadCircle.getWidth(),deadCircle.getHeight());
         }
-        else return true;
+    }
+    private boolean checkCollisionWithCircle(Rectangle rect)
+    {
+        return rect.intersects(deadCircle.getBounds());
     }
 
     public int getLandingSpacePosX() {
@@ -96,7 +142,7 @@ public class Map {
     }
 
     public int getLandingSpacePosY() {
-        return Framework.frameHeight - map[landingSpacePos]-15;
+        return Framework.frameHeight - map[landingSpacePos] - 15;
     }
 
     public int[] getMap() {

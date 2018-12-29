@@ -1,12 +1,7 @@
 package lunar_lander;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.net.URL;
 import javax.swing.*;
-import javax.swing.plaf.nimbus.State;
+import java.net.URL;
 
 
 public class Window extends JFrame {
@@ -34,7 +29,6 @@ public class Window extends JFrame {
         this.setVisible(true);
 
     }
-
 
 
     public static void main(String[] args) {

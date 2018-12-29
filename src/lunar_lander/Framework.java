@@ -1,5 +1,9 @@
 package lunar_lander;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -9,19 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 
 
 @SuppressWarnings("serial")
@@ -128,7 +121,7 @@ public class Framework extends Control {
     }
 
     private void initializeList() {
-        recordList=Utils.loadRecords();
+        recordList = Utils.loadRecords();
     }
 
     public static void addRecord(double record) {
@@ -172,17 +165,18 @@ public class Framework extends Control {
                     lastTime = System.nanoTime();
 
                     recordFlag = true;
-                    healthFlag=true;
+                    healthFlag = true;
                     break;
                 case GAMEOVER:
                     if (recordFlag && game.isPlayerLanded()) {
                         Framework.addRecord(gameTime / Framework.SECINNANO);
                         recordFlag = false;
-                        if(Main.getLevel()==7)Main.setLevel(1); //Loop to level 1, if you want more levels, just increment it
-                        else Main.setLevel(Main.getLevel()+1);
+                        if (Main.getLevel() == 7)
+                            Main.setLevel(1); //Loop to level 1, if you want more levels, just increment it
+                        else Main.setLevel(Main.getLevel() + 1);
                         initializeList();
                     }
-                    if(healthFlag && game.isPlayerCrashed()){
+                    if (healthFlag && game.isPlayerCrashed()) {
                         game.playerLostHealth();
                         healthFlag = false;
                     }
@@ -241,8 +235,8 @@ public class Framework extends Control {
                 break;
             case PAUSE:
                 game.draw(g2d, mousePosition());
-                g2d.drawString("PAUSE",frameWidth/2,frameHeight/2);
-                g2d.drawString("Press enter to continue",frameWidth/2,frameHeight/2+10);
+                g2d.drawString("PAUSE", frameWidth / 2, frameHeight / 2);
+                g2d.drawString("Press enter to continue", frameWidth / 2, frameHeight / 2 + 10);
                 panel.setVisible(true);
 
         }

@@ -1,16 +1,13 @@
 package lunar_lander;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
 
 public class Main {
 
@@ -22,9 +19,9 @@ public class Main {
 
     private BufferedImage failed; // Failed image
 
-    private static int health=5;
+    private static int health = 5;
 
-    private static int level=1;
+    private static int level = 1;
 
     public Main() {
 
@@ -42,6 +39,11 @@ public class Main {
     }
 
     private void initialize() { // Start new game
+        if(health<=0)
+        {
+            level=1;
+            health=5;
+        }
         map = new Map(level);
         player = map.getPlayer();
         landingSpace = new Landingspace(map.getLandingSpacePosX(), map.getLandingSpacePosY());
@@ -62,7 +64,7 @@ public class Main {
     {
         player.Update();
 
-        if(Control.keyboardKeyState(KeyEvent.VK_ESCAPE)) {
+        if (Control.keyboardKeyState(KeyEvent.VK_ESCAPE)) {
             Framework.gameState = Framework.GameState.PAUSE;
         }
         if (map.checkCollision()) Framework.gameState = Framework.GameState.GAMEOVER;
@@ -92,11 +94,18 @@ public class Main {
             g2d.drawString("Press Enter to return to the main menu.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 90);
         }
     }
-    public boolean isPlayerLanded(){return player.isLanded();}
 
-    public boolean isPlayerCrashed(){return player.isCrashed();}
+    public boolean isPlayerLanded() {
+        return player.isLanded();
+    }
 
-    public void playerLostHealth(){health--; }
+    public boolean isPlayerCrashed() {
+        return player.isCrashed();
+    }
+
+    public void playerLostHealth() {
+        health--;
+    }
 
     public static int getHealth() {
         return health;
