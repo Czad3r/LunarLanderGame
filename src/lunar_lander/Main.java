@@ -13,7 +13,7 @@ public class Main {
 
     private Rocket player; // Set player model
 
-    private Map map;
+    private Map map;  // Set irregular ground , set "meteor" , check for collisions
 
     private Landingspace landingSpace; // Area to land
 
@@ -39,10 +39,9 @@ public class Main {
     }
 
     private void initialize() { // Start new game
-        if(health<=0)
-        {
-            level=1;
-            health=5;
+        if (health <= 0) {
+            level = 1;
+            health = 5;
         }
         map = new Map(level);
         player = map.getPlayer();
@@ -95,6 +94,7 @@ public class Main {
         }
     }
 
+//Getters and setters
     public boolean isPlayerLanded() {
         return player.isLanded();
     }

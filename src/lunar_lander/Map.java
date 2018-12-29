@@ -11,13 +11,13 @@ public class Map {
 
     private int maxLandingSpeed; // Max speed for land
 
-    private int fuel;
+    private int fuel; //Declared in map configuration
 
     private double speedY; // Vertical speed
 
     private double speedGrav; // Gravity
 
-    private int landingSpacePos;
+    private int landingSpacePos; //Declared in map configuration
 
     private Rocket player;
 
@@ -25,7 +25,7 @@ public class Map {
 
 
     public Map(int level) {
-        loadWorld("resources/maps/map" + level + ".txt");
+        loadWorld("resources/maps/map" + level + ".txt"); //Reading map configuration from specific file
         player = new Rocket();
         initializeRocket();
         initializeCircle();
@@ -40,13 +40,13 @@ public class Map {
         player.setActualFuel(fuel);
     }
 
-    private void initializeCircle(){
+    private void initializeCircle() {
 
-        int level=Main.getLevel();
-        Random random=new Random();
-        int x=random.nextInt(Framework.frameWidth/2);
-        int y=random.nextInt(Framework.frameHeight/2);
-        deadCircle=new Ellipse2D.Double(x,y,20*level,20*level);
+        int level = Main.getLevel();
+        Random random = new Random();
+        int x = random.nextInt(Framework.frameWidth / 2);
+        int y = random.nextInt(Framework.frameHeight / 2);
+        deadCircle = new Ellipse2D.Double(x, y, 20 * level, 20 * level);
 
     }
 
@@ -70,13 +70,13 @@ public class Map {
         double yScale = (double) Framework.frameHeight / 720;
         double xScale = (double) Framework.frameWidth / 1280;
         //Section drawing circle
-        g2d.fillRoundRect((int)deadCircle.getX()-10,(int)deadCircle.getY()-10,
-                (int)deadCircle.getWidth(),(int)deadCircle.getHeight(),
-                (int)deadCircle.getWidth(),(int)deadCircle.getHeight());
+        g2d.fillRoundRect((int) deadCircle.getX() - 10, (int) deadCircle.getY() - 10,
+                (int) deadCircle.getWidth(), (int) deadCircle.getHeight(),
+                (int) deadCircle.getWidth(), (int) deadCircle.getHeight());
 
         //Updating circle if game not paused
-        if(Framework.gameState== Framework.GameState.RUNNING)
-        checkCircle();
+        if (Framework.gameState == Framework.GameState.RUNNING)
+            checkCircle();
 
         //Section drawing irregular ground
         for (int i = 0; i < map.length; i++) {
@@ -89,7 +89,7 @@ public class Map {
 
         Rectangle rocketRectangle = new Rectangle(player.getX(), player.getY(), player.landerRocketWidth, player.landerRocketHeight);
 
-        if(checkCollisionWithCircle(rocketRectangle)){
+        if (checkCollisionWithCircle(rocketRectangle)) {
             player.setCrashed(true);
             return true;
         }
@@ -121,32 +121,30 @@ public class Map {
         }
     }
 
-    private void checkCircle(){
-        if(deadCircle.getCenterX()<Framework.frameWidth+deadCircle.getWidth() && deadCircle.getCenterX()>-deadCircle.getWidth()
-            && deadCircle.getCenterY()<Framework.frameHeight+deadCircle.getHeight())
+    private void checkCircle() {
+        if (deadCircle.getCenterX() < Framework.frameWidth + deadCircle.getWidth() && deadCircle.getCenterX() > -deadCircle.getWidth()
+                && deadCircle.getCenterY() < Framework.frameHeight + deadCircle.getHeight())
             updateCircle();
     }
-    private void updateCircle(){
-        if(!player.isCrashed()){
-        int move=Main.getLevel();
-    deadCircle.setFrame(deadCircle.getX()+move,deadCircle.getY()+move,deadCircle.getWidth(),deadCircle.getHeight());
+
+    private void updateCircle() {
+        if (!player.isCrashed()) {
+            int move = Main.getLevel();
+            deadCircle.setFrame(deadCircle.getX() + move, deadCircle.getY() + move, deadCircle.getWidth(), deadCircle.getHeight());
         }
     }
-    private boolean checkCollisionWithCircle(Rectangle rect)
-    {
+
+    private boolean checkCollisionWithCircle(Rectangle rect) {
         return rect.intersects(deadCircle.getBounds());
     }
 
+    //Getters and setters
     public int getLandingSpacePosX() {
         return (int) (landingSpacePos * ((double) Framework.frameWidth / 10));
     }
 
     public int getLandingSpacePosY() {
         return Framework.frameHeight - map[landingSpacePos] - 15;
-    }
-
-    public int[] getMap() {
-        return map;
     }
 
     public Rocket getPlayer() {

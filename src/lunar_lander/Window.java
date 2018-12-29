@@ -32,19 +32,7 @@ public class Window extends JFrame {
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() { // Run thread
-
-            public void run() {
-                new Window();
-            }
-        });
-    }
-
-    public int getWindowHeight() {
-        return windowHeight;
-    }
-
-    public int getWindowWidth() {
-        return windowWidth;
+        // Run thread
+        SwingUtilities.invokeLater(() -> new Window());
     }
 }

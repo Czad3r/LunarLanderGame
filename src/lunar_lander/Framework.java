@@ -17,16 +17,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-@SuppressWarnings("serial")
 public class Framework extends Control {
 
     public static int frameWidth;
 
     public static int frameHeight;
 
-    public static final long SECINNANO = 1000000000L;
+    public static final long SECINNANO = 1000000000L; //How much nanoseconds have second
 
-    public static final long MILISECINNANO = 1000000L;
+    public static final long MILISECINNANO = 1000000L; //How much miliseconds have second
 
     private final double GAME_FPS = 30; // Lower value = easy; Higher value = hard
 
@@ -38,7 +37,7 @@ public class Framework extends Control {
 
     public static GameState gameState;
 
-    private double gameTime;
+    private double gameTime; // Field to calculate every result
 
     private double lastTime;
 
@@ -58,7 +57,7 @@ public class Framework extends Control {
 
     public Framework() {
         super();
-        initializeTabel();
+        initializeTable();
         this.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
                 Framework.frameWidth = getWidth();
@@ -78,7 +77,7 @@ public class Framework extends Control {
 
     }
 
-    private void initializeTabel() {
+    private void initializeTable() {
         initializeList();
 
         TableModel dataModel = new AbstractTableModel() {

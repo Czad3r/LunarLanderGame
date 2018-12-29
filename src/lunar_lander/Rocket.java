@@ -50,14 +50,13 @@ public class Rocket {
 
     private BufferedImage fuelLabel;
 
-    private int health;
+    private int health; // Initializing in Main.java
 
     public int landerRocketWidth; // Read image width
 
     public int landerRocketHeight; // Read image height
 
-    public Rocket() // Gather rocket dimensions
-    {
+    public Rocket() {
         loadcontent();
         health = Main.getHealth();
         random = new Random(); // Initialize random start
@@ -157,7 +156,8 @@ public class Rocket {
             if (Control.keyboardKeyState(KeyEvent.VK_LEFT)) // Draw fly image
                 g2d.drawImage(landerFlyingRight, (int) (xScale * x), (int) (yScale * y), (int) (xScale * landerRocketWidth), (int) (yScale * landerRocketHeight), null);
             g2d.drawImage(landerRocket, (int) (xScale * x), (int) (yScale * y), (int) (xScale * landerRocketWidth), (int) (yScale * landerRocketHeight), null);
-//Fuel section
+
+            //Fuel section
             double fuelStatus = actualFuel / maxFuel;
             g2d.setColor(Color.BLACK);
             g2d.drawRect(Framework.frameWidth - 90, 0, 90, 25);
@@ -172,6 +172,8 @@ public class Rocket {
         }
     }
 
+
+    //Getters and setters
     public int getX() {
         return x;
     }
@@ -188,32 +190,12 @@ public class Rocket {
         return crashed;
     }
 
-    public int getSpeedAccelerating() {
-        return speedAccelerating;
-    }
-
     public int getMaxLandingSpeed() {
         return maxLandingSpeed;
     }
 
-    public double getSpeedX() {
-        return speedX;
-    }
-
     public double getSpeedY() {
         return speedY;
-    }
-
-    public double getSpeedGrav() {
-        return speedGrav;
-    }
-
-    public double getActualFuel() {
-        return actualFuel;
-    }
-
-    public double getMaxFuel() {
-        return maxFuel;
     }
 
     public void setLanded(boolean landed) {
@@ -244,19 +226,8 @@ public class Rocket {
         this.maxFuel = maxFuel;
     }
 
-    public void setSpeedX(double speedX) {
-        this.speedX = speedX;
-    }
-
     public void setSpeedY(double speedY) {
         this.speedY = speedY;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
 }
