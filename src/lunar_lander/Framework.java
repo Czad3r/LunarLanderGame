@@ -51,6 +51,7 @@ public class Framework extends Control {
 
     private boolean recordFlag = false; // After every game flag is true for one loop, to prevent from adding multiple same record
 
+    private boolean healthFlag = false; // After every game flag is true for one loop, to prevent from losing multiple health
 
     private Main game;
 
@@ -171,11 +172,19 @@ public class Framework extends Control {
                     lastTime = System.nanoTime();
 
                     recordFlag = true;
+                    healthFlag=true;
                     break;
                 case GAMEOVER:
                     if (recordFlag && game.isPlayerLanded()) {
                         Framework.addRecord(gameTime / Framework.SECINNANO);
                         recordFlag = false;
+                        if(Main.getLevel()==7)Main.setLevel(1); //Loop to level 1, if you want more levels, just increment it
+                        else Main.setLevel(Main.getLevel()+1);
+                        initializeList();
+                    }
+                    if(healthFlag && game.isPlayerCrashed()){
+                        game.playerLostHealth();
+                        healthFlag = false;
                     }
                     break;
                 case MENU:
@@ -232,6 +241,8 @@ public class Framework extends Control {
                 break;
             case PAUSE:
                 game.draw(g2d, mousePosition());
+                g2d.drawString("PAUSE",frameWidth/2,frameHeight/2);
+                g2d.drawString("Press enter to continue",frameWidth/2,frameHeight/2+10);
                 panel.setVisible(true);
 
         }

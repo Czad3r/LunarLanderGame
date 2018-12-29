@@ -29,7 +29,7 @@ public class Utils {
     }
 
     public static void saveRecords(List<Double> list) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("resources/record/record.txt"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("resources/record/record"+String.valueOf(Main.getLevel())+".txt"))) {
             for (Double e : list) {
                 bw.write(String.valueOf(e));
                 bw.newLine();
@@ -41,7 +41,7 @@ public class Utils {
     }
 
     public static ArrayList<Double> loadRecords() {
-        try (BufferedReader br = new BufferedReader(new FileReader("resources/record/record.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("resources/record/record"+String.valueOf(Main.getLevel())+".txt"))) {
             String line;
             ArrayList<Double> tmp=new ArrayList<>();
             while ((line = br.readLine()) != null) {

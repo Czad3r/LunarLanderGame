@@ -22,6 +22,10 @@ public class Main {
 
     private BufferedImage failed; // Failed image
 
+    private static int health=5;
+
+    private static int level=1;
+
     public Main() {
 
         Thread threadForInitGame = new Thread() {
@@ -38,7 +42,7 @@ public class Main {
     }
 
     private void initialize() { // Start new game
-        map = new Map(1);
+        map = new Map(level);
         player = map.getPlayer();
         landingSpace = new Landingspace(map.getLandingSpacePosX(), map.getLandingSpacePosY());
 
@@ -89,4 +93,20 @@ public class Main {
         }
     }
     public boolean isPlayerLanded(){return player.isLanded();}
+
+    public boolean isPlayerCrashed(){return player.isCrashed();}
+
+    public void playerLostHealth(){health--; }
+
+    public static int getHealth() {
+        return health;
+    }
+
+    public static void setLevel(int level) {
+        Main.level = level;
+    }
+
+    public static int getLevel() {
+        return level;
+    }
 }

@@ -82,7 +82,12 @@ public class Map {
         }
         if(xSection>-1 && xSection<10){
         Rectangle ground=new Rectangle((int) ( xSection * ((double) Framework.frameWidth / 10)),  ((Framework.frameHeight - map[xSection]) ),  (Framework.frameWidth / 10 ),  ( map[xSection]));
-        return rocketRectangle.intersects(ground);}
+        if (rocketRectangle.intersects(ground)){
+            player.setCrashed(true);
+            return true;
+        }
+        else return false;
+        }
         else return true;
     }
 

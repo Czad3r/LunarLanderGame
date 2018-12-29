@@ -50,6 +50,8 @@ public class Rocket {
 
 	private BufferedImage fuelLabel;
 
+	private int health;
+
 	public int landerRocketWidth; // Read image width
 
 	public int landerRocketHeight; // Read image height
@@ -57,6 +59,7 @@ public class Rocket {
 	public Rocket() // Gather rocket dimensions
 	{
 		loadcontent();
+		health=Main.getHealth();
         random = new Random(); // Initialize random start
 		x = random.nextInt(Framework.frameWidth - landerRocketWidth); // X random start
 	}
@@ -155,12 +158,18 @@ public class Rocket {
 			if (Control.keyboardKeyState(KeyEvent.VK_LEFT)) // Draw fly image
 			g2d.drawImage(landerFlyingRight, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
 			g2d.drawImage(landerRocket, (int)(xScale*x), (int)(yScale*y), (int)(xScale*landerRocketWidth),(int)(yScale*landerRocketHeight), null);
-
+//Fuel section
 		double fuelStatus=actualFuel/maxFuel;
 		g2d.setColor(Color.BLACK);
 		g2d.drawRect(Framework.frameWidth-90,0,90,25);
 		g2d.fillRect(Framework.frameWidth-90,0,(int)(fuelStatus*90),25);
 		g2d.drawImage(fuelLabel,Framework.frameWidth-90,25,null);
+
+		//Health section
+		g2d.drawString("Health: "+String.valueOf(health),Framework.frameWidth-200,20);
+
+		//Level section
+			g2d.drawString("Level: "+String.valueOf(Main.getLevel()),Framework.frameWidth-300,20);
 		}
 	}
 
@@ -243,4 +252,12 @@ public class Rocket {
     public void setSpeedY(double speedY) {
         this.speedY = speedY;
     }
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
 }
