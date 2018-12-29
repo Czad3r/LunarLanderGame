@@ -60,7 +60,6 @@ public class Main {
 
         if(Control.keyboardKeyState(KeyEvent.VK_ESCAPE)) {
             Framework.gameState = Framework.GameState.PAUSE;
-
         }
         if (map.checkCollision()) Framework.gameState = Framework.GameState.GAMEOVER;
     }
@@ -89,4 +88,5 @@ public class Main {
             g2d.drawString("Press Enter to return to the main menu.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 90);
         }
     }
+    public boolean isPlayerLanded(){return player.isLanded();}
 }

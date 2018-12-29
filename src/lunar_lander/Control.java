@@ -35,12 +35,7 @@ public abstract class Control extends JPanel implements KeyListener, MouseListen
 
         this.addMouseListener(this); // Receive mouse
 
-        this.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent componentEvent) {
-                Framework.frameWidth = getWidth();
-                Framework.frameHeight = getHeight();
-            }
-        });
+
     }
 
     public abstract void draw(Graphics2D g2d); // Draw screen

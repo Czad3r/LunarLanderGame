@@ -1,16 +1,27 @@
 package lunar_lander;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 
 @SuppressWarnings("serial")
@@ -38,16 +49,28 @@ public class Framework extends Control {
 
     private double lastTime;
 
+    private boolean recordFlag = false; // After every game flag is true for one loop, to prevent from adding multiple same record
+
 
     private Main game;
 
+    private static ArrayList<Double> recordList;
+
+    private JTable table;
+
+    private JPanel panel;
 
     private BufferedImage lunarLander;
 
-    private BufferedImage lunarLanderPause;
-
     public Framework() {
         super();
+        initializeTabel();
+        this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                Framework.frameWidth = getWidth();
+                Framework.frameHeight = getHeight();
+            }
+        });
 
         gameState = GameState.DISPLAY;
 
@@ -59,7 +82,60 @@ public class Framework extends Control {
         };
         gameThread.start();
 
+    }
 
+    private void initializeTabel() {
+        initializeList();
+
+        TableModel dataModel = new AbstractTableModel() {
+            public int getColumnCount() {
+                return 1;
+            }
+
+            public int getRowCount() {
+                return 10;
+            }
+
+            public Object getValueAt(int row, int col) {
+                return recordList.get(row);
+            }
+
+            @Override
+            public String getColumnName(int column) {
+                return "Records [s]";
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return false;
+            }
+        };
+
+
+        table = new JTable(dataModel);
+        table.setEnabled(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);
+
+        this.setLayout(new BorderLayout());
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 1));
+        panel.add(table.getTableHeader());
+        panel.add(table);
+        this.add(panel, BorderLayout.EAST);
+    }
+
+    private void initializeList() {
+        recordList=Utils.loadRecords();
+    }
+
+    public static void addRecord(double record) {
+        if (record < recordList.get(9)) {
+            recordList.set(9, record);
+            recordList.sort(Double::compareTo);
+            Utils.saveRecords(recordList);
+        }
     }
 
     private void loadcontent() {
@@ -68,8 +144,6 @@ public class Framework extends Control {
             URL lunarLanderUrl = this.getClass().getResource("/lunar_lander/resources/img/menu.png");
             lunarLander = ImageIO.read(lunarLanderUrl);
 
-            URL lunarLanderUrl2 = this.getClass().getResource("/lunar_lander/resources/img/pause.png");
-            lunarLanderPause = ImageIO.read(lunarLanderUrl2);
         } catch (IOException ex) {
             Logger.getLogger(Framework.class.getName()).log(Level.SEVERE, null,
                     ex);
@@ -96,13 +170,18 @@ public class Framework extends Control {
 
                     lastTime = System.nanoTime();
 
+                    recordFlag = true;
                     break;
                 case GAMEOVER:
+                    if (recordFlag && game.isPlayerLanded()) {
+                        Framework.addRecord(gameTime / Framework.SECINNANO);
+                        recordFlag = false;
+                    }
                     break;
                 case MENU:
                     break;
                 case PAUSE:
-                    if(Control.keyboardKeyState(KeyEvent.VK_ENTER))Framework.gameState= GameState.RUNNING;
+                    if (Control.keyboardKeyState(KeyEvent.VK_ENTER)) Framework.gameState = GameState.RUNNING;
                     break;
                 case STARTING:
 
@@ -141,15 +220,19 @@ public class Framework extends Control {
         switch (gameState) {
             case RUNNING:
                 game.draw(g2d, mousePosition());
+                panel.setVisible(false);
                 break;
             case GAMEOVER:
                 game.drawgameover(g2d, mousePosition(), gameTime);
+
                 break;
             case MENU:
                 g2d.drawImage(lunarLander, 0, 0, frameWidth, frameHeight, null);
+                panel.setVisible(true);
                 break;
             case PAUSE:
-                g2d.drawImage(lunarLanderPause, 0, 0, frameWidth, frameHeight, null);
+                game.draw(g2d, mousePosition());
+                panel.setVisible(true);
 
         }
     }

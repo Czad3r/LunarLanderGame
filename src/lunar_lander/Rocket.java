@@ -48,6 +48,8 @@ public class Rocket {
 	
 	private BufferedImage landerFlyingLeft; // Lander flying right
 
+	private BufferedImage fuelLabel;
+
 	public int landerRocketWidth; // Read image width
 
 	public int landerRocketHeight; // Read image height
@@ -84,6 +86,9 @@ public class Rocket {
 			
 			URL landerFlyingLeftURL = this.getClass().getResource("/lunar_lander/resources/img/lander_fire_left.png");
 			landerFlyingLeft = ImageIO.read(landerFlyingLeftURL);
+
+			URL fuelURL = this.getClass().getResource("/lunar_lander/resources/img/fuel.png");
+			fuelLabel = ImageIO.read(fuelURL);
 			
 		} catch (IOException ex) {
 			Logger.getLogger(Rocket.class.getName())
@@ -155,6 +160,7 @@ public class Rocket {
 		g2d.setColor(Color.BLACK);
 		g2d.drawRect(Framework.frameWidth-90,0,90,25);
 		g2d.fillRect(Framework.frameWidth-90,0,(int)(fuelStatus*90),25);
+		g2d.drawImage(fuelLabel,Framework.frameWidth-90,25,null);
 		}
 	}
 
